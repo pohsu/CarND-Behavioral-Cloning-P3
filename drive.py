@@ -39,12 +39,14 @@ class SimplePIController:
 
         # integral error
         self.integral += self.error
-
+        if self.integral > 500:
+            self.integral = 500
         return self.Kp * self.error + self.Ki * self.integral
 
 
 controller = SimplePIController(0.1, 0.002)
-set_speed = 9
+# controller = SimplePIController(0.1, 0.002)
+set_speed = 30
 controller.set_desired(set_speed)
 
 
@@ -61,8 +63,10 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
-        steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
-
+        image_new = image_array[:,:,[2,1,0]]
+        steering_angle = float(model.predict(image_new[None, :, :, :], batch_size=1))
+        speed_ref = float(set_speed)*(1.0 - min(abs(steering_angle) * 0.8, 0.5))
+        controller.set_desired(speed_ref)
         throttle = controller.update(float(speed))
 
         print(steering_angle, throttle)
