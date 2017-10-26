@@ -21,10 +21,9 @@ def main():
     parser.add_argument('-l', '--lr_late', default = 5e-4, type=float)
     parser.add_argument('-e', '--epcohs', default = 5, type=int)
     args = parser.parse_args()
-    # provid selected folder names for collecting data
-    # data is collected in Windows with the path format:
-    #\\data\\foldernames\\IMG\\center_2017_10_26_01_32_48_251.jpg'
-    # but traninig is done in linux so '\\' has to be replaced by '/'
+    # **Caution** data was collected on Windows with the path format:
+    #\\data\\foldernames\\IMG\\center_2017_10_26_01_32_48_251.jpg'.
+    # But the training was done on linux, so '\\' has to be replaced by '/' for general use.
     foldernames = args.foldernames
     samples = []
     for foldername in foldernames:
@@ -141,7 +140,7 @@ def main():
     model.fit_generator(train_generator, samples_per_epoch= aug_factor*len(train_samples), validation_data=validation_generator,\
                         nb_val_samples=aug_factor*len(validation_samples), nb_epoch=args.epcohs)
 
-    Save the Model
+    #Save the Model
     model.save('model_new.h5')
     print('model is saved')
 

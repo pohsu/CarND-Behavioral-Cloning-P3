@@ -1,4 +1,4 @@
-/data
-/Simulator
-/sim*
-/model_backup
+data/
+Simulator/
+sim*/
+model_backup/
